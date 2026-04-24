@@ -1,1 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Paras</title>
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: #FFD700;
+            /* Monospace font applied globally */
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
 
+        /* Overlay to enable Autoplay */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #start-btn {
+            padding: 15px 30px;
+            font-family: 'Courier New', Courier, monospace;
+            background: #FFD700;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Falling Hearts */
+        #heart-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            color: yellow;
+            font-size: 20px;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        /* Content Container */
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 50px 10%;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #typewriter {
+            font-size: 2.5rem;
+            border-right: 3px solid yellow;
+            white-space: pre-wrap;
+        }
+
+        /* Paragraphs for Paras */
+        .para-section {
+            margin-top: 100px;
+            margin-bottom: 200px;
+            font-size: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.5s ease-out;
+        }
+
+        .para-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .name-highlight {
+            font-size: 4rem;
+            display: block;
+            margin: 50px 0;
+            color: yellow;
+            text-shadow: 0 0 10px yellow;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <button id="start-btn">BEGIN EXPERIENCE</button>
+    </div>
+
+    <div id="heart-container"></div>
+
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="content">
+        <div class="hero-section">
+            <h1 id="typewriter"></h1>
+        </div>
+
+        <div class="para-section">
+            <span class="name-highlight">PARAS</span>
+            This is the first paragraph for Paras. Since you wanted a monospace font, 
+            everything looks like code or a classic typewriter.
+        </div>
+
+        <div class="para-section">
+            The page is currently auto-scrolling. This allows you to sit back and 
+            watch the hearts fall as the text moves upward.
+        </div>
+
+        <div class="para-section">
+            You can keep adding more "para-section" divs in the HTML to include 
+            all the text you want to write.
+        </div>
+
+        <div class="para-section">
+            Finally, the yellow hearts will continue to fade out as they reach 
+             the bottom of the screen.
+        </div>
+    </div>
+
+    <script>
+        const music = document.getElementById("bg-music");
+        const startBtn = document.getElementById("start-btn");
+        const overlay = document.getElementById("overlay");
+        const typewriterElement = document.getElementById("typewriter");
+
+        const fullText = "A digital letter for Paras...";
+        let charIndex = 0;
+
+        // 1. Start Function (Music + Typewriter + Auto-Scroll)
+        startBtn.addEventListener("click", () => {
+            overlay.style.display = "none";
+            music.play();
+            typeWriter();
+            startAutoScroll();
+        });
+
+        // 2. Typewriter Effect
+        function typeWriter() {
+            if (charIndex < fullText.length) {
+                typewriterElement.innerHTML += fullText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+
+        // 3. Falling Hearts
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+            document.getElementById("heart-container").appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+        setInterval(createHeart, 300);
+
+        // 4. Reveal paragraphs on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.para-section').forEach(p => observer.observe(p));
+
+        // 5. Automatic Scroll
+        function startAutoScroll() {
+            setInterval(() => {
+                window.scrollBy(0, 1); // Adjust "1" to "2" for faster scrolling
+            }, 30);
+        }
+    </script>
+</body>
+  </html>
+  
